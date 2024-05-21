@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Signup Form</title>
+</head>
+<body>
+    <form id="signupForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email">
+        <button type="button" onclick="fetchAIData()">Go</button>
+        <br><br>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName">
+        <br><br>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName">
+        <br><br>
+        <label for="companyName">Company Name:</label>
+        <input type="text" id="companyName" name="companyName">
+        <br><br>
+        <label for="domainExpertise">Domain of Expertise:</label>
+        <input type="text" id="domainExpertise" name="domainExpertise">
+        <br><br>
+        <label for="jobRole">Job Role:</label>
+        <input type="text" id="jobRole" name="jobRole">
+        <br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        async function fetchAIData() {
+            const email = document.getElementById('email').value;
+            if (!email) {
+                alert('Please enter an email');
+                return;
+            }
+
+            try {
+                const response = await axios.post('https://your-backend.vercel.app/fetch-ai-data', { email });
+
+                const data = response.data;
+                document.getElementById('firstName').value = data.firstName;
+                document.getElementById('lastName').value = data.lastName;
+                document.getElementById('companyName').value = data.companyName;
+                document.getElementById('domainExpertise').value = data.domainExpertise;
+                document.getElementById('jobRole').value = data.jobRole;
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const jsonData = {};
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
+            try {
+                await axios.post('https://your-backend.vercel.app/submit', jsonData);
+                alert('Form submitted successfully!');
+            } catch (error) {
+                console.error('Error submitting data:', error);
+            }
+        });
+    </script>
+</body>
+</html>
